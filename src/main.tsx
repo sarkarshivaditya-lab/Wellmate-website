@@ -18,13 +18,17 @@ function Page(){
     const heroSlot=document.createElement('div')
     heroSlot.className='original-hero-slot'
     const goldenCta=goldenHero.querySelector<HTMLButtonElement>('.quiet-button')
-    const handleGoldenCta=()=>heroSlot.scrollIntoView({behavior:'smooth'})
-    goldenCta?.addEventListener('click',handleGoldenCta)
+    const handleGoldenCta=(event: Event)=>{
+      event.preventDefault()
+      event.stopImmediatePropagation()
+      heroSlot.scrollIntoView({behavior:'smooth'})
+    }
+    goldenCta?.addEventListener('click',handleGoldenCta,true)
     goldenHero.insertAdjacentElement('afterend',heroSlot)
     setSlot(heroSlot)
 
     return ()=>{
-      goldenCta?.removeEventListener('click',handleGoldenCta)
+      goldenCta?.removeEventListener('click',handleGoldenCta,true)
       heroSlot.remove()
     }
   },[])
