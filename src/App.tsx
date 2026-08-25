@@ -16,9 +16,9 @@ const pillars=[
   ['03 — RECOVERY','Sleep is part of the plan.','Track sleep and recovery alongside the rest of your wellbeing, because a good day does not begin with a workout alone.'],
 ]
 const wearables = [
-  { name:'Apple Watch', caption:'Vitals · activity · recovery', src:'/wearables/apple-watch.svg' },
-  { name:'Samsung Galaxy Watch', caption:'Health signals · movement · sleep', src:'/wearables/samsung-galaxy-watch.svg' },
-  { name:'WHOOP', caption:'Recovery · strain · sleep', src:'/wearables/whoop-band.svg' },
+  { name:'Apple Watch', caption:'Vitals · activity · recovery', src:'/smartwatch-apple.svg' },
+  { name:'Samsung Galaxy Watch', caption:'Health signals · movement · sleep', src:'/smartwatch-samsung.svg' },
+  { name:'WHOOP', caption:'Recovery · strain · sleep', src:'/smartwatch-whoop.svg' },
 ]
 
 export default function App(){
