@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type RefObject } from 'react'
-import { motion, useMotionValueEvent, useScroll, useTransform } from 'motion/react'
+import { motion, useMotionValueEvent, useScroll, useTransform, useMotionTemplate, type MotionValue } from 'motion/react'
 import './WellmateBootLayer.css'
 
 const beats = [
@@ -11,31 +11,42 @@ const beats = [
   { eyebrow: 'EMERGENCY CARE, REIMAGINED', title: 'INTRODUCING WELLMATE', tone: 'brand' },
 ] as const
 
-function beatForProgress(progress: number) {
-  if (progress < 0.40) return -1
-  if (progress < 0.50) return 0
-  if (progress < 0.60) return 1
-  if (progress < 0.70) return 2
-  if (progress < 0.80) return 3
-  if (progress < 0.89) return 4
-  if (progress < 0.97) return 5
-  return -1
+function BootBeat({ index, beat, progress }: { index: number; beat: typeof beats[number]; progress: MotionValue<number> }) {
+  const start = 0.30 + index * 0.115
+  const peak = start + 0.025
+  const end = start + 0.115
+  const opacity = useTransform(progress, [start, peak, end], [0, 1, 0])
+  const y = useTransform(progress, [start, peak, end], [34, 0, -28])
+  const scale = useTransform(progress, [start, peak, end], [0.985, 1, 1.01])
+  const blur = useTransform(progress, [start, peak, end], [7, 0, 4])
+  const filter = useMotionTemplate`blur(${blur}px)`
+
+  return (
+    <motion.div className={`wellmate-boot-beat is-${beat.tone}`} style={{ opacity, y, scale }}>
+      <motion.div className="wellmate-boot-copy" style={{ filter }}>
+        <p>{beat.eyebrow}</p>
+        <h2>{beat.title}</h2>
+        <span className="wellmate-boot-progress">0{index + 1} / 06</span>
+      </motion.div>
+    </motion.div>
+  )
 }
 
 export function WellmateBoot({ landingRef }: { landingRef?: RefObject<HTMLElement | null> }) {
   const ref = useRef<HTMLElement>(null)
   const [finished, setFinished] = useState(false)
-  const [activeBeat, setActiveBeat] = useState(-1)
+  const [finishing, setFinishing] = useState(false)
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end end'] })
-
-  const lightsOpacity = useTransform(scrollYProgress, [0, 0.08, 0.16, 0.25, 0.34, 0.40, 0.44], [0, 0, 0.20, 0.52, 0.85, 0.95, 0])
-  const lightsX = useTransform(scrollYProgress, [0.08, 0.28, 0.42], ['-12%', '0%', '8%'])
-  const lightsScale = useTransform(scrollYProgress, [0.08, 0.30, 0.42], [0.88, 1, 1.08])
-  const revealOpacity = useTransform(scrollYProgress, [0.94, 0.975, 1], [0, 0.45, 1])
-  const revealScale = useTransform(scrollYProgress, [0.94, 1], [0.96, 1])
+  const introOpacity = useTransform(scrollYProgress, [0, 0.08, 0.18, 0.27, 0.30], [0, 0, 0.55, 1, 0])
+  const revealOpacity = useTransform(scrollYProgress, [0.90, 0.96, 1], [0, 0.45, 1])
+  const revealScale = useTransform(scrollYProgress, [0.90, 1], [0.96, 1])
   const exitOpacity = useTransform(scrollYProgress, [0.965, 0.985, 1], [1, 0.62, 0])
 
-  const finish = () => setFinished(true)
+  const finish = () => {
+    if (finishing || finished) return
+    setFinishing(true)
+    window.setTimeout(() => setFinished(true), 550)
+  }
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'auto' })
@@ -47,18 +58,18 @@ export function WellmateBoot({ landingRef }: { landingRef?: RefObject<HTMLElemen
   }, [])
 
   useMotionValueEvent(scrollYProgress, 'change', latest => {
-    setActiveBeat(previous => {
-      const next = beatForProgress(latest)
-      return next === previous ? previous : next
-    })
     if (latest >= 0.999) finish()
   })
 
   useEffect(() => {
     if (!landingRef?.current || !finished) return
-    landingRef.current.removeAttribute('aria-hidden')
+    const landing = landingRef.current
+    landing.removeAttribute('aria-hidden')
+    landing.style.opacity = '0'
+    landing.style.transition = 'opacity 700ms cubic-bezier(.16,1,.3,1)'
     requestAnimationFrame(() => {
-      landingRef.current?.scrollIntoView({ behavior: 'auto', block: 'start' })
+      landing.style.opacity = '1'
+      landing.scrollIntoView({ behavior: 'auto', block: 'start' })
     })
   }, [landingRef, finished])
 
@@ -70,13 +81,10 @@ export function WellmateBoot({ landingRef }: { landingRef?: RefObject<HTMLElemen
 
   if (finished) return null
 
-  const beat = activeBeat >= 0 ? beats[activeBeat] : null
-
   return (
-    <section ref={ref} className="wellmate-boot" aria-label="WellMate cinematic introduction">
+    <section ref={ref} className={`wellmate-boot${finishing ? ' is-finishing' : ''}`} aria-label="WellMate cinematic introduction">
       <motion.div className="wellmate-boot-sticky" style={{ opacity: exitOpacity }}>
-        <div className="wellmate-boot-black" aria-hidden="true" />
-        <motion.div className="wellmate-boot-intro" style={{ opacity: lightsOpacity, x: lightsX, scale: lightsScale }} aria-hidden="true">
+        <motion.div className="wellmate-boot-intro" style={{ opacity: introOpacity }} aria-hidden="true">
           <span className="wellmate-boot-grid" />
           <span className="wellmate-boot-siren siren-red" />
           <span className="wellmate-boot-siren siren-blue" />
@@ -85,10 +93,12 @@ export function WellmateBoot({ landingRef }: { landingRef?: RefObject<HTMLElemen
           <div className="wellmate-boot-scanline" />
           <div className="wellmate-boot-noise" />
         </motion.div>
-        <div className="wellmate-boot-content" aria-live="polite">
-          {beat && <div key={beat.title} className={`wellmate-boot-beat is-${beat.tone} wellmate-boot-beat-visible`}><div className="wellmate-boot-copy"><p>{beat.eyebrow}</p><h2>{beat.title}</h2><span className="wellmate-boot-progress">0{activeBeat + 1} / 06</span></div></div>}
+        <div className="wellmate-boot-content">
+          {beats.map((beat, index) => <BootBeat key={beat.title} index={index} beat={beat} progress={scrollYProgress} />)}
         </div>
-        <motion.div className="wellmate-boot-reveal" style={{ opacity: revealOpacity, scale: revealScale }} aria-hidden="true"><div className="wellmate-boot-reveal-line" /></motion.div>
+        <motion.div className="wellmate-boot-reveal" style={{ opacity: revealOpacity, scale: revealScale }} aria-hidden="true">
+          <div className="wellmate-boot-reveal-line" />
+        </motion.div>
         <button className="wellmate-boot-skip" type="button" onClick={finish}>SKIP INTRO</button>
         <span className="wellmate-boot-scroll">SCROLL TO CONTINUE ↓</span>
       </motion.div>
