@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, type RefObject } from 'react'
 import { motion, useMotionValueEvent, useScroll, useTransform, useMotionTemplate, type MotionValue } from 'motion/react'
+import './WellmateBootLayer.css'
 
 const beats = [
   { eyebrow: 'THE GOLDEN HOUR', title: 'Thousands of people die everyday because...', tone: 'neutral' },
