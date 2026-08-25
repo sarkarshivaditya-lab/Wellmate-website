@@ -12,24 +12,25 @@ const beats = [
 ] as const
 
 function beatForProgress(progress: number) {
-  if (progress < 0.07) return -1
-  if (progress < 0.22) return 0
-  if (progress < 0.37) return 1
-  if (progress < 0.52) return 2
-  if (progress < 0.67) return 3
-  if (progress < 0.82) return 4
-  if (progress < 0.94) return 5
+  if (progress < 0.36) return -1
+  if (progress < 0.48) return 0
+  if (progress < 0.59) return 1
+  if (progress < 0.70) return 2
+  if (progress < 0.81) return 3
+  if (progress < 0.90) return 4
+  if (progress < 0.97) return 5
   return -1
 }
 
 export function WellmateBoot({ landingRef }: { landingRef?: RefObject<HTMLElement | null> }) {
   const ref = useRef<HTMLElement>(null)
   const [finished, setFinished] = useState(false)
-  const [activeBeat, setActiveBeat] = useState(0)
+  const [activeBeat, setActiveBeat] = useState(-1)
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end end'] })
-  const introOpacity = useTransform(scrollYProgress, [0, 0.055, 0.10], [1, 1, 0])
-  const revealOpacity = useTransform(scrollYProgress, [0.94, 0.975, 1], [0, 0.55, 1])
-  const revealScale = useTransform(scrollYProgress, [0.94, 1], [0.96, 1])
+  const lightsOpacity = useTransform(scrollYProgress, [0.08, 0.18, 0.31, 0.36, 0.42], [0, 0.35, 1, 1, 0])
+  const lightsX = useTransform(scrollYProgress, [0.08, 0.31, 0.42], ['-7%', '0%', '4%'])
+  const revealOpacity = useTransform(scrollYProgress, [0.97, 0.985, 1], [0, 0.55, 1])
+  const revealScale = useTransform(scrollYProgress, [0.97, 1], [0.96, 1])
 
   const finish = () => setFinished(true)
 
@@ -71,7 +72,9 @@ export function WellmateBoot({ landingRef }: { landingRef?: RefObject<HTMLElemen
   return (
     <section ref={ref} className="wellmate-boot" aria-label="WellMate cinematic introduction">
       <div className="wellmate-boot-sticky">
-        <motion.div className="wellmate-boot-intro" style={{ opacity: introOpacity }} aria-hidden="true">
+        <div className="wellmate-boot-black" aria-hidden="true" />
+
+        <motion.div className="wellmate-boot-intro" style={{ opacity: lightsOpacity, x: lightsX }} aria-hidden="true">
           <span className="wellmate-boot-grid" />
           <span className="wellmate-boot-siren siren-red" />
           <span className="wellmate-boot-siren siren-blue" />
