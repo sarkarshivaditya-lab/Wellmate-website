@@ -25,7 +25,7 @@ function beatForProgress(progress: number) {
 export function WellmateBoot({ landingRef }: { landingRef?: RefObject<HTMLElement | null> }) {
   const ref = useRef<HTMLElement>(null)
   const [finished, setFinished] = useState(false)
-  const [activeBeat, setActiveBeat] = useState(-1)
+  const [activeBeat, setActiveBeat] = useState(0)
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end end'] })
   const introOpacity = useTransform(scrollYProgress, [0, 0.055, 0.10], [1, 1, 0])
   const revealOpacity = useTransform(scrollYProgress, [0.94, 0.975, 1], [0, 0.55, 1])
