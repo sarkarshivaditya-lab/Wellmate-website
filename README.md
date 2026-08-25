@@ -1,17 +1,19 @@
 # WellMate Website
 
-Premium hackathon landing experience for WellMate.
+A premium consumer product site for WellMate.
 
-## Direction
+## Product direction
 
-Luxury/refined editorial wellness: cinematic motion, asymmetrical composition, restrained color, distinctive typography, and product-led storytelling.
+WellMate is a unified wellbeing companion for nutrition, movement, sleep, habits and mental wellbeing. Its personal AI, WellMate, uses the context users build through the product to provide more relevant guidance as a personal trainer, nutrition companion and mental wellbeing advisor.
 
 ## Quality bar
 
+- Product-led storytelling rather than feature-dump marketing
+- Premium editorial visual language with cinematic motion
+- Real WellMate product screens used as product evidence
 - Responsive desktop/tablet/mobile layouts
-- Motion-led hero and scroll reveals
 - Semantic HTML and accessible controls
-- Performance-conscious assets and effects
+- Performance-conscious image assets
 - SEO/social metadata
 - Reduced-motion support
 - Production build via Vite
