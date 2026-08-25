@@ -12,25 +12,15 @@ function Page(){
   const [slot,setSlot]=useState<HTMLElement | null>(null)
 
   useEffect(()=>{
-    const goldenHero=document.querySelector('main > .hero')
-    if(!goldenHero) return
+    const goldenBreath=document.querySelector('main > .golden-breath')
+    if(!goldenBreath) return
 
     const heroSlot=document.createElement('div')
     heroSlot.className='original-hero-slot'
-    const goldenCta=goldenHero.querySelector<HTMLButtonElement>('.quiet-button')
-    const handleGoldenCta=(event: Event)=>{
-      event.preventDefault()
-      event.stopImmediatePropagation()
-      heroSlot.scrollIntoView({behavior:'smooth'})
-    }
-    goldenCta?.addEventListener('click',handleGoldenCta,true)
-    goldenHero.insertAdjacentElement('afterend',heroSlot)
+    goldenBreath.insertAdjacentElement('afterend',heroSlot)
     setSlot(heroSlot)
 
-    return ()=>{
-      goldenCta?.removeEventListener('click',handleGoldenCta,true)
-      heroSlot.remove()
-    }
+    return ()=>heroSlot.remove()
   },[])
 
   return <>
@@ -44,5 +34,5 @@ createRoot(document.getElementById('root')!).render(
     <AuthProvider>
       <Page />
     </AuthProvider>
-  </StrictMode>,
+  </>
 )
