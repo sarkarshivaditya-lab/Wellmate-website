@@ -19,28 +19,35 @@ export function WellmateBoot({ landingRef }: { landingRef?: RefObject<HTMLElemen
   const finish = () => setFinished(true)
 
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'auto' })
+    window.scrollTo({ top: 0, left: 0, behavior: 'auto' })
+
     let ticking = false
     const update = () => {
       ticking = false
       const section = ref.current
       if (!section) return
+
       const max = Math.max(section.offsetHeight - window.innerHeight, 1)
       const raw = (window.scrollY - section.offsetTop) / max
       const next = Math.max(0, Math.min(1, raw))
+
       setProgress(next)
       setActiveBeat(Math.min(5, Math.floor(next * 6)))
-      if (next >= 0.995) finish()
+
+      if (next >= 0.998) finish()
     }
+
     const onScroll = () => {
       if (!ticking) {
         ticking = true
         requestAnimationFrame(update)
       }
     }
+
     update()
     window.addEventListener('scroll', onScroll, { passive: true })
     window.addEventListener('resize', update)
+
     return () => {
       window.removeEventListener('scroll', onScroll)
       window.removeEventListener('resize', update)
@@ -56,23 +63,43 @@ export function WellmateBoot({ landingRef }: { landingRef?: RefObject<HTMLElemen
   }, [])
 
   useEffect(() => {
-    if (!landingRef?.current || !finished) return
-    landingRef.current.removeAttribute('aria-hidden')
-    requestAnimationFrame(() => landingRef.current?.scrollIntoView({ behavior: 'auto', block: 'start' }))
+    if (!finished) return
+
+    const landing = landingRef?.current
+    if (!landing) return
+
+    landing.removeAttribute('aria-hidden')
+
+    const restoreTop = () => {
+      window.scrollTo({ top: 0, left: 0, behavior: 'auto' })
+      document.documentElement.scrollTop = 0
+      document.body.scrollTop = 0
+    }
+
+    requestAnimationFrame(() => {
+      restoreTop()
+      requestAnimationFrame(restoreTop)
+      setTimeout(restoreTop, 50)
+    })
   }, [landingRef, finished])
 
   useEffect(() => {
-    if (!landingRef?.current || finished) return
-    landingRef.current.setAttribute('aria-hidden', 'true')
-    return () => landingRef.current?.removeAttribute('aria-hidden')
+    const landing = landingRef?.current
+    if (!landing || finished) return
+
+    landing.setAttribute('aria-hidden', 'true')
+    return () => landing.removeAttribute('aria-hidden')
   }, [landingRef, finished])
 
   if (finished) return null
 
+  const introVisible = progress < 0.12
+  const revealVisible = progress > 0.88
+
   return (
     <section ref={ref} className="wellmate-boot" aria-label="WellMate cinematic introduction">
       <div className="wellmate-boot-sticky">
-        <div className={`wellmate-boot-intro ${progress < 0.12 ? 'is-visible' : 'is-hidden'}`} aria-hidden="true">
+        <div className={`wellmate-boot-intro ${introVisible ? 'is-visible' : 'is-hidden'}`} aria-hidden="true">
           <span className="wellmate-boot-grid" />
           <span className="wellmate-boot-siren siren-red" />
           <span className="wellmate-boot-siren siren-blue" />
@@ -94,7 +121,7 @@ export function WellmateBoot({ landingRef }: { landingRef?: RefObject<HTMLElemen
           ))}
         </div>
 
-        <div className={`wellmate-boot-reveal ${progress > 0.88 ? 'is-visible' : ''}`} aria-hidden="true">
+        <div className={`wellmate-boot-reveal ${revealVisible ? 'is-visible' : ''}`} aria-hidden="true">
           <div className="wellmate-boot-reveal-line" />
         </div>
 
