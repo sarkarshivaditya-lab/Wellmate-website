@@ -1,7 +1,7 @@
 {
   "name": "wellmate-website",
   "private": true,
-  "version": "1.0.0",
+  "version": "1.0.1",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -15,8 +15,10 @@
     "motion": "^12.23.24",
     "react": "^19.2.1",
     "react-dom": "^19.2.1",
-    "typescript": "~5.9.3",
-    "vite": "^7.2.2"
+    "typescript": "~5.9.3"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "@types/react": "^19.1.12",
+    "@types/react-dom": "^19.1.9"
+  }
 }
