@@ -34,5 +34,5 @@ createRoot(document.getElementById('root')!).render(
     <AuthProvider>
       <Page />
     </AuthProvider>
-  </>
+  </StrictMode>
 )
