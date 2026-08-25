@@ -5,16 +5,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const domain = import.meta.env.VITE_AUTH0_DOMAIN as string | undefined
   const clientId = import.meta.env.VITE_AUTH0_CLIENT_ID as string | undefined
   const redirectUri = (import.meta.env.VITE_AUTH0_REDIRECT_URI as string | undefined) || window.location.origin
-
-  if (!domain || !clientId) return <>{children}</>
+  const configured = Boolean(domain && clientId)
 
   return (
     <Auth0Provider
-      domain={domain}
-      clientId={clientId}
+      domain={configured ? domain! : 'placeholder.auth0.com'}
+      clientId={configured ? clientId! : 'placeholder'}
       authorizationParams={{
         redirect_uri: redirectUri,
-        audience: import.meta.env.VITE_AUTH0_AUDIENCE as string | undefined,
+        audience: (import.meta.env.VITE_AUTH0_AUDIENCE as string | undefined) || undefined,
         scope: 'openid profile email',
       }}
       cacheLocation="localstorage"
