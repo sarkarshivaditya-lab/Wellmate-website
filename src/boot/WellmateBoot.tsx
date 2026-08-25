@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type RefObject } from 'react'
-import { motion, useMotionValueEvent, useScroll, useTransform, type MotionValue } from 'motion/react'
+import { motion, useMotionValueEvent, useScroll, useTransform, useMotionTemplate, type MotionValue } from 'motion/react'
 
 const beats = [
   { eyebrow: 'THE GOLDEN HOUR', title: 'Thousands of people die everyday because...', tone: 'neutral' },
@@ -11,17 +11,18 @@ const beats = [
 ] as const
 
 function BootBeat({ index, beat, progress }: { index: number; beat: typeof beats[number]; progress: MotionValue<number> }) {
-  const start = 0.18 + index * 0.13
-  const peak = start + 0.05
-  const end = start + 0.11
+  const start = 0.08 + index * 0.145
+  const peak = start + 0.045
+  const end = start + 0.105
   const opacity = useTransform(progress, [start, peak, end], [0, 1, 0])
-  const y = useTransform(progress, [start, peak, end], [34, 0, -28])
-  const scale = useTransform(progress, [start, peak, end], [0.985, 1, 1.01])
-  const blur = useTransform(progress, [start, peak, end], [7, 0, 4], { clamp: true })
+  const y = useTransform(progress, [start, peak, end], [42, 0, -30])
+  const scale = useTransform(progress, [start, peak, end], [0.97, 1, 1.015])
+  const blur = useTransform(progress, [start, peak, end], ['blur(8px)', 'blur(0px)', 'blur(5px)'])
+  const filter = useMotionTemplate`${blur}`
 
   return (
     <motion.div className={`wellmate-boot-beat is-${beat.tone}`} style={{ opacity, y, scale }}>
-      <motion.div className="wellmate-boot-copy" style={{ filter: blur.get() === 0 ? 'blur(0px)' : `blur(${blur.get()}px)` }}>
+      <motion.div className="wellmate-boot-copy" style={{ filter }}>
         <p>{beat.eyebrow}</p>
         <h2>{beat.title}</h2>
         <span className="wellmate-boot-progress">0{index + 1} / 06</span>
@@ -34,9 +35,9 @@ export function WellmateBoot({ landingRef }: { landingRef?: RefObject<HTMLElemen
   const ref = useRef<HTMLElement>(null)
   const [finished, setFinished] = useState(false)
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end end'] })
-  const introOpacity = useTransform(scrollYProgress, [0, 0.08, 0.16], [1, 1, 0])
-  const revealOpacity = useTransform(scrollYProgress, [0.84, 0.93, 1], [0, 0.55, 1])
-  const revealScale = useTransform(scrollYProgress, [0.84, 1], [0.96, 1])
+  const introOpacity = useTransform(scrollYProgress, [0, 0.045, 0.095], [1, 1, 0])
+  const revealOpacity = useTransform(scrollYProgress, [0.88, 0.96, 1], [0, 0.55, 1])
+  const revealScale = useTransform(scrollYProgress, [0.88, 1], [0.96, 1])
 
   const finish = () => setFinished(true)
 
@@ -50,7 +51,7 @@ export function WellmateBoot({ landingRef }: { landingRef?: RefObject<HTMLElemen
   }, [])
 
   useMotionValueEvent(scrollYProgress, 'change', latest => {
-    if (latest >= 0.995) finish()
+    if (latest >= 0.999) finish()
   })
 
   useEffect(() => {
