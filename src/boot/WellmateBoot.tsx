@@ -38,14 +38,7 @@ export function WellmateBoot({ landingRef }: { landingRef?: RefObject<HTMLElemen
   const revealOpacity = useTransform(scrollYProgress, [0.84, 0.93, 1], [0, 0.55, 1])
   const revealScale = useTransform(scrollYProgress, [0.84, 1], [0.96, 1])
 
-  const finish = () => {
-    if (finished) return
-    setFinished(true)
-    requestAnimationFrame(() => {
-      landingRef?.current?.removeAttribute('aria-hidden')
-      landingRef?.current?.scrollIntoView({ behavior: 'auto', block: 'start' })
-    })
-  }
+  const finish = () => setFinished(true)
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'auto' })
@@ -59,6 +52,14 @@ export function WellmateBoot({ landingRef }: { landingRef?: RefObject<HTMLElemen
   useMotionValueEvent(scrollYProgress, 'change', latest => {
     if (latest >= 0.995) finish()
   })
+
+  useEffect(() => {
+    if (!landingRef?.current || !finished) return
+    landingRef.current.removeAttribute('aria-hidden')
+    requestAnimationFrame(() => {
+      landingRef.current?.scrollIntoView({ behavior: 'auto', block: 'start' })
+    })
+  }, [landingRef, finished])
 
   useEffect(() => {
     if (!landingRef?.current || finished) return
