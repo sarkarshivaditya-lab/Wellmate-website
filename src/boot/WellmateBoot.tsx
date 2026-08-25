@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type RefObject } from 'react'
-import { motion, useScroll, useTransform, type MotionValue } from 'motion/react'
+import { motion, useMotionValueEvent, useScroll, useTransform, type MotionValue } from 'motion/react'
 
 const beats = [
   { eyebrow: 'THE GOLDEN HOUR', title: 'Thousands of people die everyday because...', tone: 'neutral' },
@@ -32,35 +32,41 @@ function BootBeat({ index, beat, progress }: { index: number; beat: typeof beats
 
 export function WellmateBoot({ landingRef }: { landingRef?: RefObject<HTMLElement | null> }) {
   const ref = useRef<HTMLElement>(null)
-  const [skipped, setSkipped] = useState(false)
+  const [finished, setFinished] = useState(false)
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end end'] })
   const introOpacity = useTransform(scrollYProgress, [0, 0.08, 0.16], [1, 1, 0])
   const revealOpacity = useTransform(scrollYProgress, [0.84, 0.93, 1], [0, 0.55, 1])
   const revealScale = useTransform(scrollYProgress, [0.84, 1], [0.96, 1])
 
   useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'auto' })
+
     const onKey = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') setSkipped(true)
+      if (event.key === 'Escape') setFinished(true)
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
   }, [])
 
+  useMotionValueEvent(scrollYProgress, 'change', latest => {
+    if (latest >= 0.995 && !finished) setFinished(true)
+  })
+
   useEffect(() => {
-    if (!landingRef?.current || skipped) return
+    if (!landingRef?.current || finished) return
     landingRef.current.setAttribute('aria-hidden', 'true')
     return () => landingRef.current?.removeAttribute('aria-hidden')
-  }, [landingRef, skipped])
+  }, [landingRef, finished])
 
   const finish = () => {
-    setSkipped(true)
+    setFinished(true)
     requestAnimationFrame(() => {
       landingRef?.current?.removeAttribute('aria-hidden')
       landingRef?.current?.scrollIntoView({ behavior: 'auto', block: 'start' })
     })
   }
 
-  if (skipped) return null
+  if (finished) return null
 
   return (
     <section ref={ref} className="wellmate-boot" aria-label="WellMate cinematic introduction">
