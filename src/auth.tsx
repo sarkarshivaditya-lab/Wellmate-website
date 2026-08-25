@@ -7,10 +7,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const redirectUri = (import.meta.env.VITE_AUTH0_REDIRECT_URI as string | undefined) || window.location.origin
   const configured = Boolean(domain && clientId)
 
+  if (!configured) return <>{children}</>
+
   return (
     <Auth0Provider
-      domain={configured ? domain! : 'placeholder.auth0.com'}
-      clientId={configured ? clientId! : 'placeholder'}
+      domain={domain!}
+      clientId={clientId!}
       authorizationParams={{
         redirect_uri: redirectUri,
         audience: (import.meta.env.VITE_AUTH0_AUDIENCE as string | undefined) || undefined,
@@ -25,14 +27,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 }
 
 export function SignupButton({ children, onFallback, ...props }: ButtonHTMLAttributes<HTMLButtonElement> & { children: ReactNode; onFallback?: () => void }) {
-  const { loginWithRedirect } = useAuth0()
   const configured = Boolean(import.meta.env.VITE_AUTH0_DOMAIN && import.meta.env.VITE_AUTH0_CLIENT_ID)
 
+  if (!configured) {
+    return <button {...props} onClick={onFallback}>{children}</button>
+  }
+
+  return <ConfiguredSignupButton {...props}>{children}</ConfiguredSignupButton>
+}
+
+function ConfiguredSignupButton({ children, ...props }: ButtonHTMLAttributes<HTMLButtonElement> & { children: ReactNode }) {
+  const { loginWithRedirect } = useAuth0()
+
   const handleClick = async () => {
-    if (!configured) {
-      onFallback?.()
-      return
-    }
     await loginWithRedirect({ authorizationParams: { screen_hint: 'signup' } })
   }
 
