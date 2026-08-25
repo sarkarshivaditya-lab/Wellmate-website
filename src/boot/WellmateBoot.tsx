@@ -12,12 +12,12 @@ const beats = [
 ] as const
 
 function beatForProgress(progress: number) {
-  if (progress < 0.36) return -1
-  if (progress < 0.48) return 0
-  if (progress < 0.59) return 1
+  if (progress < 0.40) return -1
+  if (progress < 0.50) return 0
+  if (progress < 0.60) return 1
   if (progress < 0.70) return 2
-  if (progress < 0.81) return 3
-  if (progress < 0.90) return 4
+  if (progress < 0.80) return 3
+  if (progress < 0.89) return 4
   if (progress < 0.97) return 5
   return -1
 }
@@ -27,8 +27,13 @@ export function WellmateBoot({ landingRef }: { landingRef?: RefObject<HTMLElemen
   const [finished, setFinished] = useState(false)
   const [activeBeat, setActiveBeat] = useState(-1)
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end end'] })
-  const lightsOpacity = useTransform(scrollYProgress, [0.08, 0.18, 0.31, 0.36, 0.42], [0, 0.35, 1, 1, 0])
-  const lightsX = useTransform(scrollYProgress, [0.08, 0.31, 0.42], ['-7%', '0%', '4%'])
+
+  const lightsOpacity = useTransform(
+    scrollYProgress,
+    [0, 0.10, 0.18, 0.30, 0.39, 0.42, 0.46],
+    [0, 0, 0.18, 0.48, 0.82, 0.95, 0]
+  )
+  const lightsX = useTransform(scrollYProgress, [0.10, 0.30, 0.42], ['-9%', '0%', '7%'])
   const revealOpacity = useTransform(scrollYProgress, [0.97, 0.985, 1], [0, 0.55, 1])
   const revealScale = useTransform(scrollYProgress, [0.97, 1], [0.96, 1])
 
