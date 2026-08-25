@@ -6,6 +6,7 @@ import './styles.css'
 import './cta.css'
 import './emergency.css'
 import './boot/WellmateBoot.css'
+import './boot/WellmateBootFix.css'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
