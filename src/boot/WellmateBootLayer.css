@@ -1,0 +1,2 @@
+.wellmate-boot{height:760vh!important}.wellmate-boot-sticky{position:fixed!important;z-index:80!important;inset:0!important;width:100vw!important;height:100vh!important;min-height:620px!important;overflow:hidden!important}.wellmate-boot-intro{z-index:1!important}.wellmate-boot-content{z-index:2!important}.wellmate-boot-reveal{z-index:3!important}.wellmate-boot-scroll,.wellmate-boot-skip{z-index:5!important}
+@media (max-width:900px){.wellmate-boot{height:680vh!important}}
