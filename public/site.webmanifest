@@ -1,7 +1,7 @@
 {
-  "name": "WellMate",
+  "name": "WellMate — Golden Hour",
   "short_name": "WellMate",
-  "description": "Your whole self, understood.",
+  "description": "WellMate bridges the Golden Hour gap between accident and action.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#0d1210",
