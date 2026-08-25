@@ -38,18 +38,26 @@ export function WellmateBoot({ landingRef }: { landingRef?: RefObject<HTMLElemen
   const revealOpacity = useTransform(scrollYProgress, [0.84, 0.93, 1], [0, 0.55, 1])
   const revealScale = useTransform(scrollYProgress, [0.84, 1], [0.96, 1])
 
+  const finish = () => {
+    if (finished) return
+    setFinished(true)
+    requestAnimationFrame(() => {
+      landingRef?.current?.removeAttribute('aria-hidden')
+      landingRef?.current?.scrollIntoView({ behavior: 'auto', block: 'start' })
+    })
+  }
+
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'auto' })
-
     const onKey = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') setFinished(true)
+      if (event.key === 'Escape') finish()
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
   }, [])
 
   useMotionValueEvent(scrollYProgress, 'change', latest => {
-    if (latest >= 0.995 && !finished) setFinished(true)
+    if (latest >= 0.995) finish()
   })
 
   useEffect(() => {
@@ -57,14 +65,6 @@ export function WellmateBoot({ landingRef }: { landingRef?: RefObject<HTMLElemen
     landingRef.current.setAttribute('aria-hidden', 'true')
     return () => landingRef.current?.removeAttribute('aria-hidden')
   }, [landingRef, finished])
-
-  const finish = () => {
-    setFinished(true)
-    requestAnimationFrame(() => {
-      landingRef?.current?.removeAttribute('aria-hidden')
-      landingRef?.current?.scrollIntoView({ behavior: 'auto', block: 'start' })
-    })
-  }
 
   if (finished) return null
 
