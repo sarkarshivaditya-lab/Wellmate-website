@@ -22,7 +22,7 @@ function BootBeat({ index, beat, progress }: { index: number; beat: typeof beats
   const filter = useMotionTemplate`blur(${blur}px)`
 
   return (
-    <motion.div className={`wellmate-boot-beat wellmate-boot-beat-visible is-${beat.tone}`} style={{ opacity, y, scale }}>
+    <motion.div className={`wellmate-boot-beat is-${beat.tone}`} style={{ opacity, y, scale }}>
       <motion.div className="wellmate-boot-copy" style={{ filter }}>
         <p>{beat.eyebrow}</p>
         <h2>{beat.title}</h2>
@@ -37,7 +37,7 @@ export function WellmateBoot({ landingRef }: { landingRef?: RefObject<HTMLElemen
   const [finished, setFinished] = useState(false)
   const [finishing, setFinishing] = useState(false)
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end end'] })
-  const introOpacity = useTransform(scrollYProgress, [0, 0.06, 0.12, 0.96, 1], [0, 0.55, 1, 1, 0.85])
+  const introOpacity = useTransform(scrollYProgress, [0, 0.05, 0.10, 0.15, 0.20, 0.30], [0, 0, 0.35, 0.85, 1, 0])
   const revealOpacity = useTransform(scrollYProgress, [0.90, 0.96, 1], [0, 0.45, 1])
   const revealScale = useTransform(scrollYProgress, [0.90, 1], [0.96, 1])
   const exitOpacity = useTransform(scrollYProgress, [0.965, 0.985, 1], [1, 0.62, 0])
