@@ -3,9 +3,7 @@ import { motion, useScroll, useSpring, useTransform } from 'motion/react'
 import { Activity, ArrowDown, ArrowRight, Brain, Utensils } from 'lucide-react'
 import { SignupButton } from './auth'
 
-const screens = [
-  { src:'/screens/overview.svg', alt:'WellMate overview screen' },
-]
+const heroScreen = { src:'/screens/overview.svg', alt:'WellMate overview screen' }
 
 export function OriginalHero(){
   const hero = useRef<HTMLElement>(null)
@@ -29,7 +27,7 @@ export function OriginalHero(){
       <div className="floating-label one"><Utensils size={14}/> NUTRITION</div>
       <div className="floating-label two"><Activity size={14}/> MOVEMENT</div>
       <div className="floating-label three"><Brain size={14}/> MENTAL</div>
-      <div className="device-frame hero-device"><div className="device-notch"/><img src={screens[0].src} alt={screens[0].alt}/></div>
+      <div className="device-frame hero-device"><div className="device-notch"/><img src={heroScreen.src} alt={heroScreen.alt}/></div>
     </motion.div>
     <div className="hero-foot"><span>THE PERSONAL WELLBEING SYSTEM</span><span>SCROLL TO EXPLORE ↓</span></div>
   </section>
