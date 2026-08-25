@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type RefObject } from 'react'
-import { motion, useMotionValueEvent, useScroll, useTransform, useMotionTemplate, type MotionValue } from 'motion/react'
+import { motion, useMotionValueEvent, useScroll, useTransform, type MotionValue } from 'motion/react'
 import './WellmateBootLayer.css'
 
 const beats = [
@@ -12,22 +12,20 @@ const beats = [
 ] as const
 
 function BootBeat({ index, beat, progress }: { index: number; beat: typeof beats[number]; progress: MotionValue<number> }) {
-  const start = 0.07 + index * 0.14
-  const peak = start + 0.05
-  const end = start + 0.14
+  const start = 0.06 + index * 0.145
+  const peak = start + 0.045
+  const end = start + 0.12
   const opacity = useTransform(progress, [start, peak, end], [0, 1, 0])
-  const y = useTransform(progress, [start, peak, end], [42, 0, -30])
-  const scale = useTransform(progress, [start, peak, end], [0.97, 1, 1.015])
-  const blur = useTransform(progress, [start, peak, end], ['blur(8px)', 'blur(0px)', 'blur(5px)'])
-  const filter = useMotionTemplate`${blur}`
+  const y = useTransform(progress, [start, peak, end], [38, 0, -26])
+  const scale = useTransform(progress, [start, peak, end], [0.98, 1, 1.01])
 
   return (
     <motion.div className={`wellmate-boot-beat is-${beat.tone}`} style={{ opacity, y, scale }}>
-      <motion.div className="wellmate-boot-copy" style={{ filter }}>
+      <div className="wellmate-boot-copy">
         <p>{beat.eyebrow}</p>
         <h2>{beat.title}</h2>
         <span className="wellmate-boot-progress">0{index + 1} / 06</span>
-      </motion.div>
+      </div>
     </motion.div>
   )
 }
@@ -37,8 +35,8 @@ export function WellmateBoot({ landingRef }: { landingRef?: RefObject<HTMLElemen
   const [finished, setFinished] = useState(false)
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end end'] })
   const introOpacity = useTransform(scrollYProgress, [0, 0.045, 0.095], [1, 1, 0])
-  const revealOpacity = useTransform(scrollYProgress, [0.89, 0.96, 1], [0, 0.55, 1])
-  const revealScale = useTransform(scrollYProgress, [0.89, 1], [0.96, 1])
+  const revealOpacity = useTransform(scrollYProgress, [0.91, 0.97, 1], [0, 0.55, 1])
+  const revealScale = useTransform(scrollYProgress, [0.91, 1], [0.96, 1])
 
   const finish = () => setFinished(true)
 
