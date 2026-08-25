@@ -12,9 +12,9 @@ const beats = [
 ] as const
 
 function BootBeat({ index, beat, progress }: { index: number; beat: typeof beats[number]; progress: MotionValue<number> }) {
-  const start = 0.08 + index * 0.145
-  const peak = start + 0.045
-  const end = start + 0.105
+  const start = 0.07 + index * 0.14
+  const peak = start + 0.05
+  const end = start + 0.14
   const opacity = useTransform(progress, [start, peak, end], [0, 1, 0])
   const y = useTransform(progress, [start, peak, end], [42, 0, -30])
   const scale = useTransform(progress, [start, peak, end], [0.97, 1, 1.015])
@@ -37,8 +37,8 @@ export function WellmateBoot({ landingRef }: { landingRef?: RefObject<HTMLElemen
   const [finished, setFinished] = useState(false)
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end end'] })
   const introOpacity = useTransform(scrollYProgress, [0, 0.045, 0.095], [1, 1, 0])
-  const revealOpacity = useTransform(scrollYProgress, [0.88, 0.96, 1], [0, 0.55, 1])
-  const revealScale = useTransform(scrollYProgress, [0.88, 1], [0.96, 1])
+  const revealOpacity = useTransform(scrollYProgress, [0.89, 0.96, 1], [0, 0.55, 1])
+  const revealScale = useTransform(scrollYProgress, [0.89, 1], [0.96, 1])
 
   const finish = () => setFinished(true)
 
