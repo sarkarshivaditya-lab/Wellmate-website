@@ -10,17 +10,17 @@ The Golden Hour is the central emergency care concept behind WellMate.
 
 In an emergency, critical minutes can be lost between an accident occurring and responders receiving the information they need to act effectively. WellMate is designed to help close this gap by connecting emergency detection, escalation, and critical personal context.
 
-The emergency workflow is designed around three stages:
+The emergency workflow is designed around three stages.
 
-1. Detect
+### 1. Detect
 
 WellMate can use phone motion sensors to identify patterns associated with an abrupt movement followed by an unusually stable state.
 
-2. Confirm
+### 2. Confirm
 
 The system evaluates the detected pattern against configured emergency criteria before escalating the event.
 
-3. Escalate
+### 3. Escalate
 
 When an emergency condition is met, the workflow can contact configured emergency contacts and initiate ambulance support while making relevant emergency context available to responders.
 
@@ -116,25 +116,25 @@ When Auth0 is not configured, the website falls back to its standard access expe
 
 ## Local Development
 
-Install dependencies using the lockfile:
+Install dependencies using the lockfile.
 
 ```bash
 npm ci
 ```
 
-Start the development server:
+Start the development server.
 
 ```bash
 npm run dev
 ```
 
-Create a production build:
+Create a production build.
 
 ```bash
 npm run build
 ```
 
-Preview the production build locally:
+Preview the production build locally.
 
 ```bash
 npm run preview
